@@ -1,0 +1,56 @@
+# To get started with security, check out the documentation:
+# https://symfony.com/doc/current/security.html
+security:
+
+    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    providers:
+        our_db_provider:
+            entity:
+                class: AppBundle:User
+                property: apiKey
+        db_provider:
+            entity:
+                class: AppBundle:User
+                property: username
+        in_memory:
+            memory: ~
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            pattern: ^/admin
+            anonymous: ~
+            http_basic: ~
+            provider: db_provider
+        api:
+            guard:
+                authenticators:
+                    - AppBundle\Security\TokenAuthenticator
+            provider: our_db_provider
+            stateless: true
+
+
+            # activate different ways to authenticate
+
+            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+            #http_basic: ~
+
+            # https://symfony.com/doc/current/security/form_login_setup.html
+            #form_login: ~
+
+    access_control:
+          # require ROLE_ADMIN for /admin*
+          - { path: ^/admin, roles: ROLE_USER }
+          - { path: ^/sum, roles: ROLE_USER }
+          - { path: ^/, roles: ROLE_USER }
+          - { path: ^/transaction/*, roles: ROLE_USER }
+          - { path: ^/transactionByFilter/*, roles: ROLE_USER }
+          - { path: ^/customer/*, roles: ROLE_USER }
+
+    encoders:
+          AppBundle\Entity\User:
+              algorithm: bcrypt
