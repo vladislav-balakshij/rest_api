@@ -2,7 +2,9 @@
 
 <h3 align="center">Symfony 3.4 test task for digicode</h3>
 ## Overview
+<p>
 Rest API aplication based on symfony framework LTS.
+</p>
 <p>
 Data are protected.<br>
 Users provider store apiKey in database.<br>
